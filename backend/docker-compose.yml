@@ -1,0 +1,23 @@
+version: '3'
+services:
+  backend:
+    build: ./backend    # Đường dẫn tới thư mục chứa Dockerfile của backend
+    ports:
+      - "3000:3000"                  # Ánh xạ cổng 3000 của container vào cổng 3000 của host
+    depends_on:
+      - mongodb                       # backend phụ thuộc vào dịch vụ mongodb
+
+  mongodb:
+    image: mongo:latest
+    environment:
+      MONGO_INITDB_ROOT_USERNAME:          # Tên người dùng root cho MongoDB
+      MONGO_INITDB_ROOT_PASSWORD:       # Mật khẩu root cho MongoDB
+      MONGO_INITDB_DATABASE: chats    # Tên cơ sở dữ liệu mặc định để khởi tạo
+    ports:
+      - "27017:27017"                # Ánh xạ cổng 27017 của container vào cổng 27017 của host
+    volumes:
+      - mongodb_data:/data/db        # Mount thư mục dữ liệu MongoDB vào volume mongodb_data
+
+volumes:
+  mongodb_data:
+    driver: local

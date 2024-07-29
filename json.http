@@ -1,0 +1,51 @@
+GET http://localhost:5000/ping/
+Content-Type: application/json
+
+
+
+
+######
+GET http://localhost:5000/ping
+############
+POST http://localhost:5000/v1/api/auth/register
+Content-Type: application/json
+
+{
+  "email":"voduchuy123456@gmail.com",
+  "username": "voduchuy1235",
+  "password": "123456"
+}
+
+#########
+POST http://localhost:5000/v1/api/auth/login
+Content-Type: application/json
+
+{
+
+  "username": "voduchuy",
+  "password": "123456"
+}
+############
+POST http://localhost:5000/v1/api/auth/allUsers/6681309127714c6a018c2072
+Content-Type: application/json
+
+
+
+#####
+POST http://localhost:5000/v1/api/messages/addmessages
+Content-Type: application/json
+
+{
+  "from": "6681309127714c6a018c2072",
+  "to": "66816dd6cc6a3134549ac5c6",
+  "message": {"text":"hello toi la: 6681309127714c6a018c2072"}
+}
+
+################################################################
+POST http://localhost:5000/v1/api/messages/getmessages
+Content-Type: application/json
+
+{
+  "from": "6681309127714c6a018c2072",
+  "to": "66816dd6cc6a3134549ac5c6"
+}
