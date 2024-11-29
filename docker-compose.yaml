@@ -1,0 +1,65 @@
+services:
+  frontend:
+   
+    build:
+      dockerfile: Dockerfile
+      context: ./frontend
+    container_name: frontend
+    ports:
+      - "3000:3000"
+    depends_on:
+      - backend
+    environment:
+      - PORT = 3000
+      - REACT_APP_LOCALHOST_KEY = chat-app-current-user
+    networks:
+      - network
+    restart: always
+
+
+  backend:
+    
+    build:
+      dockerfile: Dockerfile
+      context: ./backend
+    container_name: backend
+    ports:
+      - "5000:5000"
+    environment:
+       - PORT=5000
+       - MONGO_URL=mongodb://mongo:27017/chats
+    networks:
+      - network
+    restart: always
+
+  mongo:
+    image: mongo:latest
+    # networks:
+    #   - my-network
+    container_name: mongo_app
+    environment:
+      - MONGO_INITDB_DATABASE=chats
+    ports:
+      - "27017:27017"
+    volumes:
+      - mongo-data:/data/db
+    networks:
+      - network
+    restart: always
+
+  mongo-express:
+    image: mongo-express:latest
+    restart: always
+    ports:
+    - 8081:8081
+    environment:
+        ME_CONFIG_MONGODB_URL: mongodb://mongo:27017/
+        ME_CONFIG_BASICAUTH: false
+    networks:
+      - network
+volumes:
+  mongo-data:
+networks:
+  network:
+    driver: bridge
+

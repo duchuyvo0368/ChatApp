@@ -1,20 +1,17 @@
-FROM node:20.14.0 
+FROM node:17
 # Sử dụng node image làm base image
 
 # Tạo thư mục làm việc trong container
-WORKDIR /app
+WORKDIR /backend
 
-# Sao chép file package.json và yarn.lock vào thư mục làm việc
-COPY package.json yarn.lock ./
 
-# Cài đặt các dependencies
-RUN yarn install
+COPY package.json* ./
 
-# Sao chép toàn bộ mã nguồn vào thư mục làm việc
+RUN npm install -g nodemon && npm install
+
+
 COPY . .
 
-# Mở cổng 5000
 EXPOSE 5000
 
-# Khởi chạy ứng dụng
-CMD ["yarn", "start"]
+CMD ["npm", "start"]

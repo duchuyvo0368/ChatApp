@@ -1,5 +1,5 @@
-GET http://localhost:5000/ping/
-Content-Type: application/json
+POST http://localhost:5000/v1/api/setavatar/674769167a2d0eff0b1b8b2
+
 
 
 
@@ -22,7 +22,7 @@ Content-Type: application/json
 
 {
 
-  "username": "voduchuy",
+  "username": "voduchuy1235",
   "password": "123456"
 }
 ############

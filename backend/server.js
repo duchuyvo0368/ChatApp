@@ -1,81 +1,55 @@
-// Import necessary modules
-import express from "express";
-import http from "http";
-import { Server as SocketIOServer } from "socket.io";
-import cors from "cors";
-import mongoose from "mongoose";
-import dotenv from "dotenv";
-import authRouter from "./router/auth.js";
-import messagesRouter from "./router/message.js";
-
-// Load environment variables
-dotenv.config();
-
-// Create Express app
+const express = require("express");
+const cors = require("cors");
+const mongoose = require("mongoose");
+const authRoutes = require("./routes/auth");
+const messageRoutes = require("./routes/messages");
 const app = express();
-const server = http.createServer(app); // Create HTTP server
+const socket = require("socket.io");
+require("dotenv").config();
 
-// Initialize socket.io and attach it to the HTTP server
-const io = new SocketIOServer(server, {
-  cors: {
-    origin: "http://localhost:3000",
-    credentials: true
-  }
-});
-
-// Middleware setup
 app.use(cors());
 app.use(express.json());
 
-// Connect to MongoDB
-mongoose.connect(process.env.MONGO_URL, {
-  useNewUrlParser: true,
-  useUnifiedTopology: true
-})
-.then(() => {
-  console.log("DB Connection Successful");
-})
-.catch((err) => {
-  console.error("DB Connection Error:", err.message);
+mongoose
+  .connect(process.env.MONGO_URL, {
+    useNewUrlParser: true,
+    useUnifiedTopology: true,
+  })
+  .then(() => {
+    console.log("DB Connetion Successfull");
+  })
+  .catch((err) => {
+    console.log(err.message);
+  });
+
+app.get("/ping", (_req, res) => {
+  return res.json({ msg: "Ping Successful" });
 });
 
-// Example route
-app.get("/ping", (req, res) => {
-  return res.send("Ping Successful");
+app.use("/api/auth", authRoutes);
+app.use("/api/messages", messageRoutes);
+
+const server = app.listen(process.env.PORT, () =>
+  console.log(`Server started on ${process.env.PORT}`)
+);
+const io = socket({server, 
+  cors: {
+    origin: "http://localhost:3000",
+    credentials: true,
+  },
 });
 
-// Route for authentication
-app.use("/v1/api/auth/", authRouter);
-app.use("/v1/api/messages", messagesRouter);
-// Socket.io event handling
 global.onlineUsers = new Map();
-
 io.on("connection", (socket) => {
-  console.log("A user connected");
-
+  global.chatSocket = socket;
   socket.on("add-user", (userId) => {
     onlineUsers.set(userId, socket.id);
   });
 
-  socket.on("disconnect", () => {
-    console.log("User disconnected");
-    onlineUsers.forEach((value, key) => {
-      if (value === socket.id) {
-        onlineUsers.delete(key);
-      }
-    });
-  });
-
-  socket.on("send-message", (data) => {
-    const sendUserSocket = onlineUsers.get(data.id);
+  socket.on("send-msg", (data) => {
+    const sendUserSocket = onlineUsers.get(data.to);
     if (sendUserSocket) {
-      socket.to(sendUserSocket).emit("send-message", data.msg);
+      socket.to(sendUserSocket).emit("msg-recieve", data.msg);
     }
   });
-});
-
-// Start server
-const PORT = process.env.PORT || 3000;
-server.listen(PORT, () => {
-  console.log(`Server is running on http://localhost:${PORT}`);
 });
