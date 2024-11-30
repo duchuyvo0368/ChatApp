@@ -7,17 +7,17 @@ POST http://localhost:5000/v1/api/setavatar/674769167a2d0eff0b1b8b2
 ######
 GET http://14.225.192.12:5000/ping
 ############
-POST http://localhost:5000/v1/api/auth/register
+POST http://14.225.192.12:5000/v1/api/auth/register
 Content-Type: application/json
 
 {
   "email":"voduchuy123456@gmail.com",
   "username": "voduchuy1235",
-  "password": "123456"
+  "password": "12345678"
 }
 
 #########
-POST http://localhost:5000/v1/api/auth/login
+POST http://14.225.192.12:5000/v1/api/auth/login
 Content-Type: application/json
 
 {
