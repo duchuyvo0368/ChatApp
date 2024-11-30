@@ -7,7 +7,7 @@ POST http://localhost:5000/v1/api/setavatar/674769167a2d0eff0b1b8b2
 ######
 GET http://14.225.192.12:5000/ping
 ############
-POST http://14.225.192.12:5000/v1/api/auth/register
+POST https://chatapp-4-r6m5.onrender.com/api/auth/register
 Content-Type: application/json
 
 {
