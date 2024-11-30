@@ -25,7 +25,7 @@ mongoose
 app.get("/ping", (_req, res) => {
   return res.json({ msg: "Ping Successful" });
 });
-
+app.use('/api-docs', swaggerUi.serve, swaggerUi.setup(swaggerSpec));
 app.use("/api/auth", authRoutes);
 app.use("/api/messages", messageRoutes);
 
