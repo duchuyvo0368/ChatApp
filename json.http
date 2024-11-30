@@ -17,7 +17,7 @@ Content-Type: application/json
 }
 
 #########
-POST http://14.225.192.12:5000/v1/api/auth/login
+POST https://chatapp-4-r6m5.onrender.com/api/auth/login
 Content-Type: application/json
 
 {

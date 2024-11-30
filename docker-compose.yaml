@@ -31,7 +31,20 @@ services:
     networks:
       - network
     restart: always
-
+  nginx:
+    build:
+      context: ./nginx
+      dockerfile: Dockerfile
+    container_name: nginx
+    ports:
+      - "80:80"  
+      - "443:443"
+    depends_on:
+      - backend
+    volumes:
+      - ./nginx/certs:/etc/ssl/certs
+    networks:
+      - network
   mongo:
     image: mongo:latest
     # networks:
