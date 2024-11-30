@@ -1,6 +1,6 @@
-FROM node:16-alpine
+FROM node:17
 
-WORKDIR /app
+WORKDIR /frontend
 COPY package*.json ./
 RUN npm install
 COPY . .

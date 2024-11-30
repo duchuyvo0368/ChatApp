@@ -5,3 +5,4 @@
 .prettierignore
 node_modules/
 .next
+.git

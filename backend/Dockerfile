@@ -1,4 +1,4 @@
-FROM node:17
+FROM node:18
 # Sử dụng node image làm base image
 
 # Tạo thư mục làm việc trong container

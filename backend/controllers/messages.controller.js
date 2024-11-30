@@ -1,43 +1,39 @@
+const Messages = require("../models/message.model");
 
-import Messages from '../models/message.model.js';
+module.exports.getMessages = async (req, res, next) => {
+  try {
+    const { from, to } = req.body;
 
+    const messages = await Messages.find({
+      users: {
+        $all: [from, to],
+      },
+    }).sort({ updatedAt: 1 });
 
-
-
-export  async function getMessage (req, res, next) {
-    try{
-        const {from,to}=req.body;
-        const messages=await Messages.find({user:{
-            $all:[from, to]
-        },
-    }).sort({updateAt:1})
-
-    const projectMessage=messages.map((msg) =>{
-        return{
-            fromSelf:msg.sender.toString()===from,
-            messages:msg.message.text
-        }
+    const projectedMessages = messages.map((msg) => {
+      return {
+        fromSelf: msg.sender.toString() === from,
+        message: msg.message.text,
+      };
     });
-    res.json(projectMessage);
-    }catch(e){
-        next(e);
-    }
-}
-export  async function addMessage(req,res,next){
-    try{
-        const {from,to,message}=req.body;
-        const data=await Messages.create({
-            message:{text: message.text},
-            user:[from,to],
-            sender:from
-        })
-        if(data){
-            res.json({msg:"Message added successfully."})
-        }else{
-            res.json({msg:"Failed to add message."})
-        }
-    }catch(e){
-        next(e);
-    }
+    res.json(projectedMessages);
+  } catch (ex) {
+    next(ex);
+  }
+};
 
-}
+module.exports.addMessage = async (req, res, next) => {
+  try {
+    const { from, to, message } = req.body;
+    const data = await Messages.create({
+      message: { text: message },
+      users: [from, to],
+      sender: from,
+    });
+
+    if (data) return res.json({ msg: "Message added successfully." });
+    else return res.json({ msg: "Failed to add message to the database" });
+  } catch (ex) {
+    next(ex);
+  }
+};
